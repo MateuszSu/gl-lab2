@@ -41,17 +41,50 @@ def axes():
 
 
 def render(time):
-    V=50
-    egg=np.zeros(V,V,3)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-    glLoadIdentity()
+    steps=10
+    u=0
+    egg=np.zeros((steps,steps,3))
+    for u_start in range (steps):
+        v=0
+        for v_start in range (steps):
+            x=(-90*u**5+225*u**4-270*u**3+180*u**2-45*u)*np.cos(np.pi*v)
+            y=160*u**4-320*u**3+160*u**2-5
+            z=(-90*u**5+225*u**4-270*u**3+180*u**2-45*u)*np.sin(np.pi*v)
+            egg[u_start][v_start]=[x,y,z]
+            #glBegin(GL_POINTS)             #3.0 done
+            #glColor3ub(255, 255, 0)
+            #glVertex3f(x,y,z)
+            #glEnd()
+            v+=1/(steps-1)
+        u+=1/(steps-1)
 
-    spin(time * 90 / 3.14)
-    glBegin(GL_TRIANGLE_STRIP)
-
+    #glBegin(GL_LINES)
+    #for u_start in range (steps):
+    #    for v_start in range (steps):
+    #        if u_start!=steps-1:
+    #            glVertex3f(egg[u_start][v_start][0],egg[u_start][v_start][1],egg[u_start][v_start][2])
+    #            glVertex3f(egg[u_start+1][v_start][0],egg[u_start+1][v_start][1],egg[u_start+1][v_start][2])
+    #        if v_start!=steps-1:
+    #            glVertex3f(egg[u_start][v_start][0],egg[u_start][v_start][1],egg[u_start][v_start][2])
+    #            glVertex3f(egg[u_start][v_start+1][0],egg[u_start][v_start+1][1],egg[u_start][v_start+1][2]) 
+    #glEnd()
+    
+    glBegin(GL_TRIANGLES)
+    for u_start in range (steps-1):
+        for v_start in range (steps-1):
+            if u_start!=steps-1 or v_start!=steps-1:
+                glVertex3f(egg[u_start][v_start][0],egg[u_start][v_start][1],egg[u_start][v_start][2])
+                glVertex3f(egg[u_start+1][v_start][0],egg[u_start+1][v_start][1],egg[u_start+1][v_start][2])
+                glVertex3f(egg[u_start][v_start+1][0],egg[u_start][v_start+1][1],egg[u_start][v_start+1][2])
+            else:
+                glVertex3f(egg[u_start+1][v_start][0],egg[u_start+1][v_start][1],egg[u_start+1][v_start][2])
+                glVertex3f(egg[u_start][v_start+1][0],egg[u_start][v_start+1][1],egg[u_start][v_start+1][2])
+                glVertex3f(egg[u_start+1][v_start+1][0],egg[u_start+1][v_start+1][1],egg[u_start+1][v_start+1][2])
     glEnd()
+    glLoadIdentity()
+    spin(time * 90 / 3.14)
     axes()
-
     glFlush()
 
 
