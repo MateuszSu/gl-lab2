@@ -41,13 +41,14 @@ def axes():
 
 def plane():
     global map, dim
-    dim=100
-    distance=30
-    move=15
+    dim=50
+    distance=25
+    move=25
     map=np.zeros((dim,dim,3))
-    for i in range (steps):
-        for n in range (steps):
+    for i in range (dim):
+        for n in range (dim):
             map[i][n]=[(i-move)*distance,(n-move)*distance,0]
+            map[i][n][2]=np.random.randint(1,15)
 
 def color():
     global color_map
@@ -125,14 +126,14 @@ def zad4():
     glEnd()
 
 def zad5():
-    glRotatef(0,0,0,0)
+    glRotatef(60,1,0,0)
     for u_start in range (dim-1):
         glBegin(GL_LINE_STRIP)
         for v_start in range (dim-1):
-            glVertex3f(map[u_start][v_start][0]/dim,map[u_start][v_start][1]/dim,map[u_start][v_start][2])
-            glVertex3f(map[u_start][v_start+1][0]/dim,map[u_start][v_start+1][1]/dim,map[u_start][v_start][2])
-            glVertex3f(map[u_start+1][v_start][0]/dim,map[u_start+1][v_start][1]/dim,map[u_start][v_start][2])
-            glVertex3f(map[u_start+1][v_start+1][0]/dim,map[u_start+1][v_start+1][1]/dim,map[u_start][v_start][2])
+            glVertex3f(map[u_start][v_start][0]/dim,map[u_start][v_start][1]/dim,map[u_start][v_start][2]/dim)
+            glVertex3f(map[u_start][v_start+1][0]/dim,map[u_start][v_start+1][1]/dim,map[u_start][v_start+1][2]/dim)
+            glVertex3f(map[u_start+1][v_start][0]/dim,map[u_start+1][v_start][1]/dim,map[u_start+1][v_start][2]/dim)
+            glVertex3f(map[u_start+1][v_start+1][0]/dim,map[u_start+1][v_start+1][1]/dim,map[u_start+1][v_start+1][2]/dim)
         glEnd()
 
 
