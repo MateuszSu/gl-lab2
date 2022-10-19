@@ -41,14 +41,14 @@ def axes():
 
 def plane():
     global map, dim
-    dim=50
-    distance=25
-    move=25
+    dim=25
+    distance=30
+    move=15
     map=np.zeros((dim,dim,3))
     for i in range (dim):
         for n in range (dim):
             map[i][n]=[(i-move)*distance,(n-move)*distance,0]
-            map[i][n][2]=np.random.randint(1,15)
+            map[i][n][2]=np.random.randint(1,10)
 
 def color():
     global color_map
@@ -77,7 +77,7 @@ def zad1():
         for v_start in range (steps):
             glBegin(GL_POINTS)          
             glColor3ub(255, 255, 0)
-            glVertex3f(egg[u_start,v_start][0],egg[u_start,v_start][1],egg[u_start,v_start][2])
+            glVertex3f(*egg[u_start,v_start])
             glEnd()
 
 
@@ -86,11 +86,11 @@ def zad2():
     for u_start in range (steps):
         for v_start in range (steps):
             if u_start!=steps-1:
-                glVertex3f(egg[u_start][v_start][0],egg[u_start][v_start][1],egg[u_start][v_start][2])
-                glVertex3f(egg[u_start+1][v_start][0],egg[u_start+1][v_start][1],egg[u_start+1][v_start][2])
+                glVertex3f(*egg[u_start][v_start])
+                glVertex3f(*egg[u_start+1][v_start])
             if v_start!=steps-1:
-                glVertex3f(egg[u_start][v_start][0],egg[u_start][v_start][1],egg[u_start][v_start][2])
-                glVertex3f(egg[u_start][v_start+1][0],egg[u_start][v_start+1][1],egg[u_start][v_start+1][2]) 
+                glVertex3f(*egg[u_start][v_start])
+                glVertex3f(*egg[u_start][v_start+1]) 
     glEnd()
 
 
@@ -99,18 +99,18 @@ def zad3():
     glBegin(GL_TRIANGLES)
     for u_start in range (steps-1):
         for v_start in range (steps-1):
-            glColor3f(color_map[u_start][v_start][0],color_map[u_start][v_start][1],color_map[u_start][v_start][2])
-            glVertex3f(egg[u_start][v_start][0],egg[u_start][v_start][1],egg[u_start][v_start][2])
-            glColor3f(color_map[u_start+1][v_start][0],color_map[u_start+1][v_start][1],color_map[u_start+1][v_start][2])
-            glVertex3f(egg[u_start+1][v_start][0],egg[u_start+1][v_start][1],egg[u_start+1][v_start][2])
-            glColor3f(color_map[u_start][v_start+1][0],color_map[u_start][v_start+1][1],color_map[u_start][v_start+1][2])
-            glVertex3f(egg[u_start][v_start+1][0],egg[u_start][v_start+1][1],egg[u_start][v_start+1][2])
-            glColor3f(color_map[u_start+1][v_start][0],color_map[u_start+1][v_start][1],color_map[u_start+1][v_start][2])
-            glVertex3f(egg[u_start+1][v_start][0],egg[u_start+1][v_start][1],egg[u_start+1][v_start][2])
-            glColor3f(color_map[u_start+1][v_start][0],color_map[u_start+1][v_start][1],color_map[u_start+1][v_start][2])
-            glVertex3f(egg[u_start][v_start+1][0],egg[u_start][v_start+1][1],egg[u_start][v_start+1][2])
-            glColor3f(color_map[u_start+1][v_start+1][0],color_map[u_start+1][v_start+1][1],color_map[u_start+1][v_start+1][2])
-            glVertex3f(egg[u_start+1][v_start+1][0],egg[u_start+1][v_start+1][1],egg[u_start+1][v_start+1][2])
+            glColor3f(*color_map[u_start][v_start])
+            glVertex3f(*egg[u_start][v_start])
+            glColor3f(*color_map[u_start+1][v_start])
+            glVertex3f(*egg[u_start+1][v_start])
+            glColor3f(*color_map[u_start][v_start+1])
+            glVertex3f(*egg[u_start][v_start+1])
+            glColor3f(*color_map[u_start+1][v_start])
+            glVertex3f(*egg[u_start+1][v_start])
+            glColor3f(*color_map[u_start+1][v_start])
+            glVertex3f(*egg[u_start][v_start+1])
+            glColor3f(*color_map[u_start+1][v_start+1])
+            glVertex3f(*egg[u_start+1][v_start+1])
     glEnd()
 
 
@@ -118,22 +118,23 @@ def zad4():
     glBegin(GL_TRIANGLE_STRIP)
     for u_start in range (steps-1):
         for v_start in range (steps-1):
-            glColor3f(color_map[u_start][v_start][0],color_map[u_start][v_start][1],color_map[u_start][v_start][2])
-            glVertex3f(egg[u_start][v_start][0],egg[u_start][v_start][1],egg[u_start][v_start][2])
-            glVertex3f(egg[u_start][v_start+1][0],egg[u_start][v_start+1][1],egg[u_start][v_start+1][2])
-            glVertex3f(egg[u_start+1][v_start][0],egg[u_start+1][v_start][1],egg[u_start+1][v_start][2])
-            glVertex3f(egg[u_start+1][v_start+1][0],egg[u_start+1][v_start+1][1],egg[u_start+1][v_start+1][2])
+            glColor3f(*color_map[u_start][v_start])
+            glVertex3f(*egg[u_start][v_start])
+            glVertex3f(*egg[u_start][v_start+1])
+            glVertex3f(*egg[u_start+1][v_start])
+            glVertex3f(*egg[u_start+1][v_start+1])
     glEnd()
 
 def zad5():
-    glRotatef(60,1,0,0)
+    glRotatef(70,1,0,0)
+    glRotatef(20,0,0,1)
     for u_start in range (dim-1):
         glBegin(GL_LINE_STRIP)
         for v_start in range (dim-1):
-            glVertex3f(map[u_start][v_start][0]/dim,map[u_start][v_start][1]/dim,map[u_start][v_start][2]/dim)
-            glVertex3f(map[u_start][v_start+1][0]/dim,map[u_start][v_start+1][1]/dim,map[u_start][v_start+1][2]/dim)
-            glVertex3f(map[u_start+1][v_start][0]/dim,map[u_start+1][v_start][1]/dim,map[u_start+1][v_start][2]/dim)
-            glVertex3f(map[u_start+1][v_start+1][0]/dim,map[u_start+1][v_start+1][1]/dim,map[u_start+1][v_start+1][2]/dim)
+            glVertex3f(*(map[u_start][v_start]/dim))
+            glVertex3f(*(map[u_start][v_start+1]/dim))
+            glVertex3f(*(map[u_start+1][v_start+1]/dim))
+            glVertex3f(*(map[u_start+1][v_start+1]/dim))
         glEnd()
 
 
@@ -145,7 +146,7 @@ def render(time):
     zad5()
     
     glLoadIdentity()
-    #spin(time * 90 / 3.14)
+    spin(time * 90 / 3.14)
     axes()
     glFlush()
 
