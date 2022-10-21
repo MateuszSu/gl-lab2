@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 import sys
 import numpy as np
+from perlin_noise import PerlinNoise
 from glfw.GLFW import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
+
 
 
 def startup():
@@ -40,15 +42,32 @@ def axes():
     glEnd()
 
 def plane():
-    global map, dim
+    global map, dim, depth
+    depth = 100
     dim=25
-    distance=30
-    move=15
+    distance=15
+    move=12.5
+    noise=PerlinNoise()
     map=np.zeros((dim,dim,3))
+    yoff=0.0
+    for i in range (dim):
+        xoff=0.0
+        for n in range (dim):
+            map[i][n]=[(i-move)*distance,(n-move)*distance,noise([xoff,yoff])*depth]
+            xoff+=0.2
+        yoff+=0.2
+
+
+def color_on_depth():
+    global color_m
+    color_m=np.zeros((dim,dim,3))
     for i in range (dim):
         for n in range (dim):
-            map[i][n]=[(i-move)*distance,(n-move)*distance,0]
-            map[i][n][2]=np.random.randint(1,10)
+            if map[i][n][2]<= depth/2:
+                color_m[i][n]=[255,int(map[i][n][2]*255/(0.5*depth)),0]
+            else:
+                color_m[i][n]=[int(255-map[i][n][2]*255/(0.5*depth)),255,0]
+
 
 def color():
     global color_map
@@ -120,20 +139,28 @@ def zad4():
         for v_start in range (steps-1):
             glColor3f(*color_map[u_start][v_start])
             glVertex3f(*egg[u_start][v_start])
+            glColor3f(*color_map[u_start][v_start+1])
             glVertex3f(*egg[u_start][v_start+1])
+            glColor3f(*color_map[u_start+1][v_start])
             glVertex3f(*egg[u_start+1][v_start])
+            glColor3f(*color_map[u_start+1][v_start+1])
             glVertex3f(*egg[u_start+1][v_start+1])
     glEnd()
 
 def zad5():
-    glRotatef(70,1,0,0)
+    glRotatef(50,1,0,0)
     glRotatef(20,0,0,1)
+    #glRotatef(90,1,0,0)
     for u_start in range (dim-1):
         glBegin(GL_LINE_STRIP)
         for v_start in range (dim-1):
+            glColor3f(*color_m[u_start][v_start])
             glVertex3f(*(map[u_start][v_start]/dim))
+            glColor3f(*color_m[u_start][v_start+1])
             glVertex3f(*(map[u_start][v_start+1]/dim))
-            glVertex3f(*(map[u_start+1][v_start+1]/dim))
+            glColor3f(*color_m[u_start+1][v_start])
+            glVertex3f(*(map[u_start+1][v_start]/dim))
+            glColor3f(*color_m[u_start+1][v_start+1])
             glVertex3f(*(map[u_start+1][v_start+1]/dim))
         glEnd()
 
@@ -146,7 +173,7 @@ def render(time):
     zad5()
     
     glLoadIdentity()
-    spin(time * 90 / 3.14)
+    #spin(time * 90 / 3.14)
     axes()
     glFlush()
 
@@ -173,8 +200,8 @@ def update_viewport(window, width, height):
 
 def main():
     calc()
-    color()
     plane()
+    color_on_depth()
     if not glfwInit():
         sys.exit(-1)
 
